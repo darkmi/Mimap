@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>KityMinder Editor - Powered By FEX</title>
+    <link href="/favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        h1.editor-title {
+            background: #393F4F;
+            color: white;
+            margin: 0;
+            height: 40px;
+            font-size: 14px;
+            line-height: 40px;
+            font-family: 'Hiragino Sans GB', 'Arial', 'Microsoft Yahei';
+            font-weight: normal;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="editor-title">KityMinder Editor - Powered By FEX</h1>
+    <div id="app"></div>
+    <script>
+        window.__bootErrors = [];
+        window.addEventListener('error', function(e) {
+            window.__bootErrors.push(e.message + ' @ ' + (e.filename || '') + ':' + e.lineno);
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            window.__bootErrors.push('REJECT: ' + e.reason);
+        });
+        (function() {
+            var origError = console.error;
+            console.error = function() {
+                window.__bootErrors.push('CONSOLE: ' + [].map.call(arguments, String).join(' ').slice(0, 500));
+                origError.apply(console, arguments);
+            };
+        })();
+    </script>
+    <script type="module" src="/vue-main.js"></script>
+</body>
+</html>
