@@ -1,22 +1,17 @@
-KityMinder Editor
+Mimap
 ==========
+
+[English](README.en.md)
 
 ## 简介
 
-KityMinder Editor 是一款强大、简洁、体验优秀的脑图编辑工具，适合用于编辑树/图/网等结构的数据。
+**Mimap 是一款 AI 原生脑图工具——用一句话生成脑图。** 输入一句需求，AI 即可为你生成结构完整的脑图；生成之后，还可以继续用内置编辑器进行精细化调整与扩展。
 
-编辑器由百度 [FEX](https://github.com/fex-team) 基于 [kityminder-core](https://github.com/fex-team/kityminder-core) 搭建，并且在[百度脑图](http://naotu.baidu.com)中使用。
-
-他们的区别与联系如下：
-
-![KityMinder 联系](relations.png "KityMinder 联系")
-
-- [kityminder-core](https://github.com/fex-team/kityminder-core) 是 kityminder 的核心部分，基于百度 [FEX](https://github.com/fex-team) 开发的矢量图形库 [kity](https://github.com/fex-team/kity)。包含了脑图数据的可视化展现，简单编辑功能等所有底层支持。
-- [kityminder-editor](https://github.com/fex-team/kityminder-editor) 基于 kityminder-core 搭建，UI 层为 Vue 3，包含热盒 [hotbox](https://github.com/fex-team/hotbox) 等方便用户输入的功能，简单来说，就是一款编辑器。
-- [百度脑图](http://naotu.baidu.com) 基于 kityminder-editor，加入了第三方格式导入导出 (FreeMind, XMind, MindManager) 、文件储存、用户认证、文件分享、历史版本等业务逻辑。
+编辑器 UI 基于 Vue 3 构建，采用 Vite 构建链路，并配备 Vitest 单元测试与 Playwright E2E 测试。
 
 ## 功能
 
+- AI 生成：用一句话描述需求，直接生成结构完整的脑图
 - 基本操作：文本编辑，节点折叠、插入、删除、排序、归纳、复制、剪切、粘贴等
 - 样式控制：字体、加粗、斜体、颜色、样式拷贝、样式粘贴等
 - 图标：优先级、进度等
@@ -30,37 +25,62 @@ KityMinder Editor 是一款强大、简洁、体验优秀的脑图编辑工具�
 - 数据导入导出：支持多种格式的导入，多种格式（包括图片）的导出
 - 缩略图：支持缩略图查看/导航
 
-## 开发使用
-根目录下的 `index.html` 为 Vue 3 开发入口。
+## 快速开始
 
-1. 安装 [nodejs](http://nodejs.org)（建议 LTS 版本）
+根目录下的 `index.html` 为开发入口（Vite）。
+
+1. 安装 [Node.js](http://nodejs.org)（建议 LTS 版本）
 2. 初始化：切到项目根目录下运行 `npm install`
-3. 运行 `npm run dev` 即可启动项目（Vite，默认 http://localhost:5173）
-4. 你可以基于根目录的 `index.html` 开发，Enjoy it！
+3. 运行 `npm run dev` 启动开发服务器（默认 http://localhost:5173）
+4. 基于根目录的 `index.html` 与 `vueui/` 目录开发，Enjoy it！
+
+## 工程结构
+
+```
+index.html          开发入口页面
+vue-main.js         应用入口：加载全局库 + 挂载 Vue 应用
+vue-app.js          Vue 应用装配（createApp(KmEditor)）
+editor-entry.js     编辑器运行时入口（src/ 模块树）
+src/                ESM 编辑器运行时（fsm/receiver/hotbox/input/clipboard/drag/history 等 runtime）
+vueui/              Vue 3 UI 层（KmEditor.vue + components/）
+less/               Less 样式（与组件 DOM class 命名保持兼容）
+vendor/hotbox/      hotbox（历史遗留的 Bower 包，随仓库维护）
+public/             静态资源（雪碧图等）
+types/              底层图形/内核库的 TypeScript 声明
+e2e/                Playwright E2E 用例
+tests/              Vitest 单元测试
+docs/               升级方案、测试方案文档
+server/             图片上传示例服务端（PHP）
+```
 
 工程说明：
 
-- 包管理使用 npm；Bower 独有包（hotbox）放在 `vendor/` 目录
-- `src/` 为 ESM 编辑器运行时
-- UI 层为 Vue 3（`vueui/` 目录）
-- kity / kityminder-core / hotbox 依赖非严格模式，在入口中以传统 `<script>` 方式按序加载（通过 `?url` 导入，dev/build 行为一致）
-- 样式系统（`less/editor.less`）与组件 DOM class 命名保持兼容
+- 包管理使用 npm；hotbox 等非 npm 包放在 `vendor/` 目录
+- 底层图形/内核库依赖非严格模式，在入口中以传统 `<script>` 方式按序加载（通过 `?url` 导入，dev/build 行为一致）
+- 构建目标为 `es2022`（入口使用顶层 `await` 按序加载全局库）
 
 ## 构建
-运行 `npm run build`，完成后 `dist` 目录即可部署运行；`npm run preview` 可本地预览产物。
+
+```bash
+npm run build
+```
+
+完成后 `dist` 目录即可部署运行；`npm run preview` 可本地预览产物。
 
 ## 测试
+
 ```bash
-# 单元测试
+# 单元测试（Vitest）
 npm test
 
-# E2E（需先 npx playwright install chromium）
+# E2E 测试（Playwright，首次需安装浏览器）
+npx playwright install chromium
 npm run test:e2e
 ```
 
 ## 数据导入导出
-由于 kityminder-editor 是基于 kityminder-core 搭建的，而 kityminder-core 内置了五种常见
-格式的导入或导出，在创建编辑器实例之后，可以使用四个接口进行数据的导入导出。
+
+在创建编辑器实例之后，可以使用四个接口进行数据的导入导出。
 
 * `editor.minder.exportJson()` - 导出脑图数据为 JSON 对象
 * `editor.minder.importJson(json)` - 导入 JSON 对象为当前脑图数据
@@ -75,15 +95,10 @@ npm run test:e2e
 * `svg` - SVG 矢量格式，仅支持导出
 * `png` - PNG 位图格式，仅支持导出
 
-更多格式的支持，可以加载 [kityminder-protocol](https://github.com/fex-team/kityminder-protocol) 来扩展第三方格式支持。
-
-数据格式的具体信息，可参考 [kityminder-core-wiki 的中的说明](https://github.com/fex-team/kityminder-core/wiki)。
-
 ## 联系我们
-问题和建议反馈：
 
-[Github issues](https://github.com/fex-team/kityminder-editor/issues)
+问题和建议反馈请提交 [GitHub Issues](https://github.com/darkmi/Mimap/issues)。
 
-邮件组：kity@baidu.com
+## 许可证
 
-QQ 讨论群：475962105
+Apache-2.0。

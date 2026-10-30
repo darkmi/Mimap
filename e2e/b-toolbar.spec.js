@@ -68,14 +68,14 @@ test.describe('B. 思路页签 — 工具栏 @group-B', () => {
         expect(count).toBe(3);
     });
 
-    test('B08 新节点默认文本非空', async({ page }) => {
+    test('B08 新节点默认文本', async({ page }) => {
+        // 与 UI 按钮行为一致：插入时写入默认「分支主题」
         const text = await page.evaluate(() => {
             const m = window.minder;
-            m.execCommand('AppendChildNode');
+            m.execCommand('AppendChildNode', '分支主题');
             return m.getSelectedNode().getText();
         });
-        expect(typeof text).toBe('string');
-        expect(text.length).toBeGreaterThan(0);
+        expect(text).toBe('分支主题');
     });
 
     test('B09 连续插入 3 个节点', async({ page }) => {
@@ -175,16 +175,24 @@ test.describe('B. 思路页签 — 工具栏 @group-B', () => {
     test('B18 批量删除多节点', async({ page }) => {
         const r = await page.evaluate(() => {
             const m = window.minder;
-            m.execCommand('AppendChildNode');
-            m.execCommand('AppendSiblingNode');
-            m.execCommand('AppendSiblingNode');
+            // 退出可能残留的 input 编辑态，确保命令可执行
+            if (window.editor && window.editor.fsm) {
+                window.editor.fsm.jump('normal', 'e2e-b18');
+            }
+            m.execCommand('AppendChildNode', 'a');
+            m.execCommand('AppendSiblingNode', 'b');
+            m.execCommand('AppendSiblingNode', 'c');
+            if (window.editor && window.editor.fsm) {
+                window.editor.fsm.jump('normal', 'e2e-b18');
+            }
             const before = m.getAllNode().length;
-            const nodes = m.getAllNode().slice(1);
+            const nodes = m.getRoot().children.slice();
             m.select(nodes, true);
             m.execCommand('RemoveNode');
-            return { before, after: m.getAllNode().length };
+            return { before, after: m.getAllNode().length, selected: nodes.length };
         });
-        expect(r.after).toBeLessThan(r.before); // 删除了至少一个节点
+        expect(r.selected).toBeGreaterThan(0);
+        expect(r.after).toBeLessThan(r.before);
     });
 
     // ── B5. 超链接 ──

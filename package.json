@@ -1,6 +1,6 @@
 {
-  "name": "kityminder-editor",
-  "version": "1.0.67",
+  "name": "mimap",
+  "version": "0.0.1",
   "description": "A powerful mind map editor",
   "scripts": {
     "dev": "vite",
@@ -11,21 +11,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fex-team/kityminder-editor"
+    "url": "https://github.com/darkmi/Mimap"
   },
   "keywords": [
-    "kityminder",
+    "mimap",
+    "mindmap",
+    "ai",
     "editor",
     "html5",
-    "js",
-    "mindmap"
+    "js"
   ],
-  "author": "fex <fex@baidu.com>",
-  "license": "GPL-2.0",
+  "author": "darkmi <darkmi@126.com>",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/fex-team/kityminder-editor/issues"
+    "url": "https://github.com/darkmi/Mimap/issues"
   },
-  "homepage": "https://github.com/fex-team/kityminder-editor",
+  "homepage": "https://github.com/darkmi/Mimap",
   "devDependencies": {
     "@playwright/test": "^1.64.1",
     "@vitejs/plugin-vue": "^5.2.4",

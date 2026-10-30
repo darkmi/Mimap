@@ -130,7 +130,7 @@ function ok() {
                 </li>
             </ul>
             <div class="tab-content" style="padding-top: 12px">
-                <div v-show="activeTab === 'search'" class="tab-pane">
+                <div class="tab-pane" :class="{ active: activeTab === 'search' }">
                     <form class="form-inline" @submit.prevent="searchImage()">
                         <div class="form-group">
                             <label for="search-keyword">关键词：</label>
@@ -149,7 +149,7 @@ function ok() {
                         </ul>
                     </div>
                 </div>
-                <div v-show="activeTab === 'url'" class="tab-pane">
+                <div class="tab-pane" :class="{ active: activeTab === 'url' }">
                     <form>
                         <div class="form-group" :class="urlGroupClass">
                             <label for="image-url">链接地址：</label>
@@ -167,7 +167,7 @@ function ok() {
                         </div>
                     </form>
                 </div>
-                <div v-show="activeTab === 'upload'" class="tab-pane">
+                <div class="tab-pane" :class="{ active: activeTab === 'upload' }">
                     <form>
                         <div class="form-group">
                             <input type="file" name="upload-image" id="upload-image" class="upload-image"
